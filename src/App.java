@@ -2,14 +2,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Main {
-    public static void imprimirEstudiantes(String titulo, Estudiante[] estudiantes) {
-        System.out.println("--- " + titulo + " ---");
-        for (Estudiante e : estudiantes) {
-            System.out.println(" |-> " + e.getApellido() + ", " + e.getNombre() + " (" + e.getCarrera() + ")");
-        }
-    }
-
+public class App {
     public static void main(String[] args) {
         // --- 1. Inicialización y Herencia ---
         Universidad miUniversidad = new Universidad("Universidad de Levantamiento de Pala");
@@ -66,11 +59,20 @@ public class Main {
         System.out.println("\n===== 4. ORDENAMIENTO Y BÚSQUEDA BINARIA =====");
         
         // a. Ordenamiento (Selection Sort)
-        imprimirEstudiantes("Array Original (Desordenado)", estudiantesArray);
+        
+        // Lógica de "imprimirEstudiantes" (ANTES)
+        System.out.println("--- " + "Array Original (Desordenado)" + " ---");
+        for (Estudiante e : estudiantesArray) {
+            System.out.println(" |-> " + e.getApellido() + ", " + e.getNombre() + " (" + e.getCarrera() + ")");
+        }
         
         Estudiante[] arrayOrdenado = Universidad.ordenarEstudiantesPorApellido(estudiantesArray);
         
-        imprimirEstudiantes("Array Ordenado por Apellido", arrayOrdenado);
+        // Lógica de "imprimirEstudiantes" (DESPUÉS)
+        System.out.println("--- " + "Array Ordenado por Apellido" + " ---");
+        for (Estudiante e : arrayOrdenado) {
+            System.out.println(" |-> " + e.getApellido() + ", " + e.getNombre() + " (" + e.getCarrera() + ")");
+        }
         
         // b. Búsqueda Binaria (Requiere array ordenado)
         String apellidoBuscar = "Díaz"; // Juan Díaz
