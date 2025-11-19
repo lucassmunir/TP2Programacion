@@ -1,22 +1,17 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Universidad {
     private String nombre;
-    private List<MiembroUniversidad> miembros; 
+    private ListaEnlazada<MiembroUniversidad> miembros; 
 
     public Universidad(String nombre) {
         this.nombre = nombre;
-        this.miembros = new ArrayList<>();
+        this.miembros = new ListaEnlazada<>();
     }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
 
     public void agregarMiembro(MiembroUniversidad miembro) {
         if (miembro != null) {
-            miembros.add(miembro);
+            miembros.agregarAlFinal(miembro);
             System.out.println("Miembro agregado: " + miembro.obtenerRol() + " - " + ((Persona)miembro).getNombre());
         }
     }
@@ -33,7 +28,7 @@ public class Universidad {
         }
         System.out.println("----------------------------------------");
     }
-
+    
     public void buscarPorRol(String rol) {
         System.out.println("\n--- Buscando Miembros con Rol: " + rol + " ---");
         int contador = 0;
@@ -43,115 +38,84 @@ public class Universidad {
                 contador++;
             }
         }
-        if (contador == 0) {
-            System.out.println("No se encontraron miembros con el rol '" + rol + "'.");
-        }
+        if (contador == 0) System.out.println("No se encontraron miembros con el rol '" + rol + "'.");
         System.out.println("----------------------------------------");
     }
-    
-    // --- Métodos de Ayuda para Algoritmos ---
+
     private Estudiante[] obtenerEstudiantesArray() {
-        List<Estudiante> estudiantesList = new ArrayList<>();
-        for (MiembroUniversidad miembro : miembros) {
-            if (miembro instanceof Estudiante) {
-                estudiantesList.add((Estudiante) miembro);
+        Object[] todosLosMiembros = miembros.convertirAArray();
+        
+        int contadorEstudiantes = 0;
+        for (Object obj : todosLosMiembros) {
+            if (obj instanceof Estudiante) {
+                contadorEstudiantes++;
             }
         }
-        return estudiantesList.toArray(new Estudiante[0]);
-    }
-    
-    // --- 2. Contar Estudiantes por Carrera ---
-    // Versión Iterativa
-    public static int contarEstudiantesIterativo(Estudiante[] estudiantes, String carrera) {
-    int contador = 0;
-    for (Estudiante e : estudiantes) {
-        if (e.getCarrera().equals(carrera)) {
-            contador++;
+
+        Estudiante[] arrayEstudiantes = new Estudiante[contadorEstudiantes];
+        int index = 0;
+
+        for (Object obj : todosLosMiembros) {
+            if (obj instanceof Estudiante) {
+                arrayEstudiantes[index] = (Estudiante) obj;
+                index++;
+            }
         }
+        
+        return arrayEstudiantes;
     }
+
+    public static int contarEstudiantesIterativo(Estudiante[] estudiantes, String carrera) {
+        int contador = 0;
+        for (Estudiante e : estudiantes) {
+            if (e.getCarrera().equals(carrera)) contador++;
+        }
         return contador;
     }
 
-    // Versión Recursiva (Método Estático)
     public static int contarEstudiantesRecursivo(Estudiante[] estudiantes, String carrera, int indice) {
-        if (indice >= estudiantes.length) {
-            return 0;
-        }
-        
-        int sumaActual = 0;
-        if (estudiantes[indice].getCarrera() != null && estudiantes[indice].getCarrera().equalsIgnoreCase(carrera)) {
-            sumaActual = 1;
-        }
-        
-        return sumaActual + contarEstudiantesRecursivo(estudiantes, carrera, indice + 1);
+        if (indice >= estudiantes.length) return 0;
+        int suma = (estudiantes[indice].getCarrera().equalsIgnoreCase(carrera)) ? 1 : 0;
+        return suma + contarEstudiantesRecursivo(estudiantes, carrera, indice + 1);
     }
     
     public int contarEstudiantesPorCarreraRecursivo(String carrera) {
-        Estudiante[] estudiantes = obtenerEstudiantesArray();
+        Estudiante[] estudiantes = obtenerEstudiantesArray(); 
         return contarEstudiantesRecursivo(estudiantes, carrera, 0);
     }
 
-    // --- 3. Buscar Estudiante por Documento ---
-    // Versión Iterativa
     public Estudiante buscarEstudiantePorDocumentoIterativo(String documento) {
         Estudiante[] estudiantes = obtenerEstudiantesArray();
         for (Estudiante e : estudiantes) {
-            if (e.getDocumento() != null && e.getDocumento().equals(documento)) {
-                return e;
-            }
+            if (e.getDocumento() != null && e.getDocumento().equals(documento)) return e;
         }
         return null;
     }
 
-    // Versión Recursiva (Método Estático)
-    public static Estudiante buscarEstudianteRecursivo(Estudiante[] estudiantes, String documento, int indice) {
-        if (indice >= estudiantes.length) {
-            return null;
-        }
-        if (estudiantes[indice].getDocumento() != null && estudiantes[indice].getDocumento().equals(documento)) {
-            return estudiantes[indice];
-        }
-        return buscarEstudianteRecursivo(estudiantes, documento, indice + 1);
-    }
-    
-    public Estudiante buscarEstudiantePorDocumentoRecursivo(String documento) {
-        Estudiante[] estudiantes = obtenerEstudiantesArray();
-        return buscarEstudianteRecursivo(estudiantes, documento, 0);
-    }
-
-    // Algoritmo de Ordenamiento y Búsqueda
     public static Estudiante[] ordenarEstudiantesPorApellido(Estudiante[] estudiantes) {
         int n = estudiantes.length;
         for (int i = 0; i < n - 1; i++) {
-            int indiceMinimo = i;
+            int min = i;
             for (int j = i + 1; j < n; j++) {
-                if (estudiantes[j].getApellido().compareTo(estudiantes[indiceMinimo].getApellido()) < 0) {
-                    indiceMinimo = j;
+                if (estudiantes[j].getApellido().compareTo(estudiantes[min].getApellido()) < 0) {
+                    min = j;
                 }
             }
-            if (indiceMinimo != i) {
-                Estudiante temp = estudiantes[i];
-                estudiantes[i] = estudiantes[indiceMinimo];
-                estudiantes[indiceMinimo] = temp;
-            }
+            Estudiante temp = estudiantes[i];
+            estudiantes[i] = estudiantes[min];
+            estudiantes[min] = temp;
         }
         return estudiantes;
     }
 
-    // Busqueda
     public static int busquedaBinariaEstudiantes(Estudiante[] estudiantes, String apellido) {
-        int izquierda = 0;
-        int derecha = estudiantes.length - 1;
-        while (izquierda <= derecha) {
-            int medio = (izquierda + derecha) / 2;
-            int comparacion = apellido.compareTo(estudiantes[medio].getApellido());
-            if (comparacion == 0) {
-                return medio;
-            } else if (comparacion < 0) {
-                derecha = medio - 1;
-            } else {
-                izquierda = medio + 1;
-            }
+        int izq = 0, der = estudiantes.length - 1;
+        while (izq <= der) {
+            int medio = (izq + der) / 2;
+            int comp = apellido.compareTo(estudiantes[medio].getApellido());
+            if (comp == 0) return medio;
+            if (comp < 0) der = medio - 1;
+            else izq = medio + 1;
         }
         return -1;
     }

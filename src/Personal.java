@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-/* import java.util.Objects; */
 
 public class Personal extends Persona implements MiembroUniversidad {
     private String departamento;

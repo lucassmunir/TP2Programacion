@@ -1,0 +1,39 @@
+Entregables Adicionales: Análisis de Listas Enlazadas
+
+1. Explicación de las diferencias entre trabajar con arrays y listas enlazadas
+
+La diferencia fundamental radica en cómo se almacenan y acceden los datos en la memoria:
+
+Arrays (Arreglos):
+
+Memoria: Ocupan un bloque de memoria contiguo (uno al lado del otro).
+
+Tamaño: Es fijo. Una vez creado (new int[5]), no puede crecer. Para agregar elementos, se debe crear un array nuevo y copiar todo.
+
+Acceso: Acceso Aleatorio (Directo). Podemos acceder instantáneamente a cualquier posición (arr[4]) porque la computadora calcula la dirección de memoria matemáticamente.
+
+Listas Enlazadas:
+
+Memoria: Ocupan bloques de memoria dispersos (nodos). Cada nodo contiene el dato y una referencia (siguiente) al próximo nodo.
+
+Tamaño: Es dinámico. Puede crecer o decrecer indefinidamente. Agregar un elemento es tan simple como crear un nuevo nodo y enlazarlo.
+
+Acceso: Acceso Secuencial. Para llegar al elemento 5, debemos empezar por el primero y recorrer el 2, 3 y 4. No hay "saltos" directos.
+
+2. Análisis de ventajas y desventajas de usar listas enlazadas en este contexto
+
+En el contexto de nuestro Sistema de Gestión Universitaria:
+
+Ventajas
+
+Inserción Eficiente: Al agregar materias a un alumno o miembros a la universidad, la Lista Enlazada es superior. Simplemente usamos agregarAlFinal y enlazamos un nodo. Con arrays, tendríamos que haber usado Arrays.copyOf repetidamente, lo cual es costoso computacionalmente (O(N)).
+
+Flexibilidad: No necesitamos saber de antemano cuántos alumnos o materias habrá. La estructura se adapta al tamaño real necesario, ahorrando memoria si hay pocos alumnos, o creciendo si hay muchos.
+
+Desventajas
+
+Búsqueda Binaria Complicada: Como vimos en el TP, la Búsqueda Binaria requiere acceder al "medio" ((izq + der) / 2). En una Lista Enlazada, llegar al medio es lento (hay que recorrer). Por eso tuvimos que implementar la estrategia de convertir la lista a array antes de ordenar y buscar.
+
+Mayor uso de memoria por elemento: Cada Materia o Estudiante ahora necesita un objeto extra (Nodo) que ocupa memoria adicional para guardar la referencia siguiente.
+
+Complejidad: Tuvimos que escribir más código (clases Nodo, ListaEnlazada) en comparación con usar simplemente ArrayList o Arrays nativos.
