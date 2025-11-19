@@ -1,4 +1,2 @@
-## Trabajo Práctico 1 - Programación Orientada a Objetos en JAVA
-
--Ivan Aguilar
+## Trabajo Práctico 2 - Programación Orientada a Objetos en JAVA
 -Aguirre Lucas
